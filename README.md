@@ -1,5 +1,3 @@
-# framework-test
-
 # Framework Performance Testing
 
 This repository contains scripts to test and compare the performance of different web frameworks using `wrk` (a modern HTTP benchmarking tool) and Docker stats for resource usage monitoring. The results are stored in text files within the `/logs` directory.
