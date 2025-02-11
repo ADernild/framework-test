@@ -1,0 +1,4 @@
+.env
+test/logs/framework-test*
+full-requirements.*
+.DS_Store

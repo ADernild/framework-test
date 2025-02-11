@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:17
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  django:
+    build: ./django
+    command: uvicorn core.asgi:application --host 0.0.0.0 --port 8000
+    ports:
+      - "8050:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./django/:/work
+    env_file:
+      - .env
+
+  django-sync:
+    build: ./django
+    command: gunicorn --bind 0.0.0.0:8000 --worker-class gevent core.wsgi:application
+    ports:
+      - "8053:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./django/:/work
+    env_file:
+      - .env
+
+  fastapi:
+    build: ./fastapi
+    command: uvicorn main:app --host 0.0.0.0 --port 8051
+    ports:
+      - "8051:8051"
+    volumes:
+      - ./fastapi/:/work
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  actix_web:
+    build: ./actix_web
+    ports:
+      - "8052:8052"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
